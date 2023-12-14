@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+  annotations:
+    field.cattle.io/description: Docker registry
+    registry: docker
+  labels:
+    registry: docker
+    app: registry
+  namespace: registry
+spec:
+  selector:
+    matchLabels:
+      app: docker-registry
+  template:
+    metadata:
+      labels:
+        app: docker-registry
+    spec:
+      containers:
+        - imagePullPolicy: Always
+          name: registry
+          volumeMounts:
+            - name: registry-vol
+              mountPath: /var/lib/registry
+          image: registry:2
+          ports:
+          - containerPort: 5000
+            protocol: "TCP"
+      restartPolicy: Always
+      volumes:
+        - name: registry-vol
+          persistentVolumeClaim:
+            claimName: registry-pvc
+  replicas: 1
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: registry-pvc
+  namespace: registry
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: registry
+    service: registry
+  name: registry-service
+  namespace: registry
+spec: 
+  selector:
+    app: docker-registry
+  ports:
+    - name: registry-tcp
+      port: 5000
+      protocol: TCP
+      targetPort: 5000
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: registry-ingress
+  namespace: registry
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: registry.localhost
+    http:
+      paths:
+      - backend:
+          service:
+            name: registry-service
+            port: 
+              number: 5000
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - registry.localhost
