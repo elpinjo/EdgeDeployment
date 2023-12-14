@@ -64,7 +64,7 @@ spec:
     stages {
 
 		stage('Prepare'){
-            steps {
+      steps {
 				dir("${PACKAGE}") {
 					sh 'mkdir build \
 						build/repo \
@@ -85,7 +85,7 @@ spec:
 		  steps {
 			  container(name: 'kaniko', shell: '/busybox/sh') {
 				  sh '''#!/busybox/sh
-				  /kaniko/executor --context ${PACKAGE} \
+				  /kaniko/executor --context . \
 					  --destination ${CONTAINER}:${CONTAINER_TAG} \
 		  			--build-arg EDGE_VERSION=${EDGE_VERSION} \
 		  			--build-arg WPM_CRED=${WPM_CRED} \
@@ -98,7 +98,7 @@ spec:
 		
 		stage('Deploy-Container'){
       steps {
-				container(name: 'dind', shell: '/bin/sh') {
+				container(name: 'kaniko', shell: '/bin/sh') {
 					withKubeConfig([credentialsId: 'jenkins-agent-account', serverUrl: 'https://kubernetes.default']) {
 						sh '''#!/bin/sh
 						cat deployment/api-DC.yml | sed --expression='s/${CONTAINER}/'$CONTAINER'/g' | sed --expression='s/${REGISTRY}/'$REGISTRY'/g' | sed --expression='s/${CONTAINER_TAG}/'$CONTAINER_TAG'/g' | sed --expression='s/${NAMESPACE}/'$NAMESPACE'/g' | kubectl apply -f -'''
