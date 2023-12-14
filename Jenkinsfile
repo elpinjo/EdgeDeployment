@@ -90,7 +90,7 @@ spec:
 		  			--build-arg EDGE_VERSION=${EDGE_VERSION} \
 		  			--build-arg WPM_CRED=${WPM_CRED} \
 		  			--build-arg GITHUB_CREDS_USR=${GITHUB_CREDS_USR} \
-		  			--build-arg GITHUB_CREDS_PSW=${GITHUB_CREDS_PSW}")
+		  			--build-arg GITHUB_CREDS_PSW=${GITHUB_CREDS_PSW}
 				  '''
 			  }
 		  }
