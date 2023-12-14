@@ -86,7 +86,7 @@ spec:
 			  container(name: 'kaniko', shell: '/busybox/sh') {
 				  sh '''#!/busybox/sh
 				  /kaniko/executor --context . \
-					  --destination ${CONTAINER}:${CONTAINER_TAG} \
+					  --destination ${params.REGISTRY}/${CONTAINER}:${CONTAINER_TAG} \
 		  			--build-arg EDGE_VERSION=${EDGE_VERSION} \
 		  			--build-arg WPM_CRED=${WPM_CRED} \
 		  			--build-arg GITHUB_CREDS_USR=${GITHUB_CREDS_USR} \
