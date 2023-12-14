@@ -54,6 +54,7 @@ spec:
 		PACKAGE = "*"
 		NAMESPACE = "edge-deployment"
 		REGISTRY_INGRESS = "https://${params.REGISTRY}"
+		REGISTRY = "${params.REGISTRY}"
 		CONTAINER = "demo-edge-runtime"
 		CONTAINER_TAG = "1.0.${env.BUILD_NUMBER}"
 		EDGE_VERSION = "${params.EDGE_VERSION}"
@@ -86,7 +87,7 @@ spec:
 			  container(name: 'kaniko', shell: '/busybox/sh') {
 				  sh '''#!/busybox/sh
 				  /kaniko/executor --context . \
-					  --destination ${params.REGISTRY}/${CONTAINER}:${CONTAINER_TAG} \
+					  --destination ${REGISTRY}/${CONTAINER}:${CONTAINER_TAG} \
 		  			--build-arg EDGE_VERSION=${EDGE_VERSION} \
 		  			--build-arg WPM_CRED=${WPM_CRED} \
 		  			--build-arg GITHUB_CREDS_USR=${GITHUB_CREDS_USR} \
