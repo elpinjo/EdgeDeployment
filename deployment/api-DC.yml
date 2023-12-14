@@ -5,9 +5,9 @@ metadata:
   name: demo-edge-runtime
   namespace: edge-deployment
 data:
-  SAG_IS_CLOUD_REGISTER_TOKEN: 8bc81296e10741a39ee87143a053cbb8cc2bd036aefd430487af21c882da7898
+  SAG_IS_CLOUD_REGISTER_TOKEN: 1fc2d6a2cb4847feaaa1487571ca21d8377aec5d46144768a076ffb69c1060c5
   SAG_IS_CLOUD_REGISTER_URL: https://wmintanywhere.int-aw-au.webmethods.io
-  SAG_IS_EDGE_CLOUD_ALIAS: EdgeRuntime_SE_TS_Edge
+  SAG_IS_EDGE_CLOUD_ALIAS: EdgeRuntime_NL_MIHE_K8S
   SAG_IS_HEALTH_ENDPOINT_ACL: Anonymous
   SAG_IS_CLOUD_ALLOWSYNC: "false"
 ---
@@ -62,8 +62,10 @@ spec:
               protocol: "TCP"
           resources:
             limits:
+              cpu: 1000m
               memory: 1Gi
             requests:
+              cpu: 500m
               memory: 512Mi
           envFrom:
             - configMapRef:

@@ -1,3 +1,25 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: registry-cert
+  namespace: registry
+spec:
+  # Secret names are always required.
+  secretName: registry-k8s-tls
+  commonName: registrty.k8s
+  dnsNames:
+    - registry.k8s
+    - registry.registry
+    - registry.servers
+  issuerRef:
+    name: ca-issuer
+    # We can reference ClusterIssuers by changing the kind here.
+    # The default value is Issuer (i.e. a locally namespaced Issuer)
+    kind: ClusterIssuer
+    # This is optional since cert-manager will default to this value however
+    # if you are using an external issuer, change this to that issuer group.
+    group: cert-manager.io
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,15 +46,27 @@ spec:
           volumeMounts:
             - name: registry-vol
               mountPath: /var/lib/registry
+            - name: secret-volume
+              mountPath: /etc/registry/certs
           image: registry:2
           ports:
-          - containerPort: 5000
+          - containerPort: 443
             protocol: "TCP"
+          env:
+          - name: REGISTRY_HTTP_ADDR
+            value: 0.0.0.0:443
+          - name: REGISTRY_HTTP_TLS_CERTIFICATE
+            value: /etc/registry/certs/tls.crt
+          - name: REGISTRY_HTTP_TLS_KEY
+            value: /etc/registry/certs/tls.key
       restartPolicy: Always
       volumes:
         - name: registry-vol
           persistentVolumeClaim:
             claimName: registry-pvc
+        - name: secret-volume
+          secret:
+            secretName: registry-k8s-tls
   replicas: 1
 ---
 apiVersion: v1
@@ -45,7 +79,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 30Gi
 ---
 apiVersion: v1
 kind: Service
@@ -60,25 +94,7 @@ spec:
     app: docker-registry
   ports:
     - name: registry-tcp
-      port: 5000
+      port: 443
       protocol: TCP
-      targetPort: 5000
-  type: ClusterIP
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: registry-ingress
-  namespace: registry
-spec:
-  ingressClassName: traefik
-  rules:
-  - host: registry.localhost
-    http:
-      paths:
-      - backend:
-          service:
-            name: registry-service
-            port: 
-              number: 5000
-        pathType: ImplementationSpecific
+      targetPort: 443
+  type: LoadBalancer
