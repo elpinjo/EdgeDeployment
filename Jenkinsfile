@@ -55,7 +55,7 @@ spec:
 	environment {
 		PACKAGE = "*"
 		NAMESPACE = "edge-deployment"
-		REGISTRY_INGRESS = "https://${params.REGISTRY}"
+		REGISTRY_INGRESS = "http://${params.REGISTRY}"
 		CONTAINER = "demo-edge-runtime"
 		CONTAINER_TAG = "1.0.${env.BUILD_NUMBER}"
 		EDGE_VERSION = "${params.EDGE_VERSION}"

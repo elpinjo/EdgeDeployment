@@ -45,7 +45,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 30Gi
+      storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
@@ -82,6 +82,3 @@ spec:
             port: 
               number: 5000
         pathType: ImplementationSpecific
-  tls:
-  - hosts:
-    - registry.localhost
