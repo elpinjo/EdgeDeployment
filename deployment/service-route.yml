@@ -24,7 +24,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   rules:
-  - host: ${CONTAINER}.${HOST}
+  - host: ${HOST}
     http:
       paths:
       - backend:
