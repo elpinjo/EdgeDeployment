@@ -10,30 +10,28 @@ spec:
   containers:
   - name: jnlp
     workingDir: /tmp/jenkins
-  - name: dind
+  - name: kaniko
     workingDir: /tmp/jenkins
-    image: portainer/kube-tools
+    image: gcr.io/kaniko-project/executor:debug
     imagePullPolicy: Always
     restartPolicy: Never
     command: 
-    - /bin/cat
+    - /busybox/cat
     tty: true
     volumeMounts:
-    - name: docker-sock
-      mountPath: /var/run/docker.sock
     - name: jenkins-docker-cfg
-      mountPath: /root/.docker
-    securityContext:
-      privileged: true
+      mountPath: /kaniko/.docker
+    - name: tmp-dir
+      mountPath: /wm-installer
   volumes:
-  - name: docker-sock
+  - name: tmp-dir
     hostPath:
-      path: "/var/run/docker.sock"
+      path: "/tmp/license"
   - name: jenkins-docker-cfg
     projected:
       sources:
       - secret:
-          name: swagregcred
+          name: docker-credentials 
           items:
             - key: .dockerconfigjson
               path: config.json 
