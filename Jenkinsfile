@@ -10,6 +10,9 @@ spec:
   containers:
   - name: jnlp
     workingDir: /tmp/jenkins
+  - name: kubectl
+    image: rancher/kubectl:v1.25.16
+    workingDir: /tmp/jenkins
   - name: kaniko
     workingDir: /tmp/jenkins
     image: gcr.io/kaniko-project/executor:debug
@@ -100,7 +103,7 @@ spec:
 		
 		stage('Deploy-Container'){
       steps {
-				container(name: 'kaniko', shell: '/bin/sh') {
+				container(name: 'kubectl', shell: '/bin/sh') {
 					withKubeConfig([credentialsId: 'jenkins-agent-account', serverUrl: 'https://kubernetes.default']) {
 						sh '''#!/bin/sh
 						cat deployment/api-DC.yml | sed --expression='s/${CONTAINER}/'$CONTAINER'/g' | sed --expression='s/${REGISTRY}/'$REGISTRY'/g' | sed --expression='s/${CONTAINER_TAG}/'$CONTAINER_TAG'/g' | sed --expression='s/${NAMESPACE}/'$NAMESPACE'/g' | kubectl apply -f -'''
