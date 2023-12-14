@@ -48,7 +48,7 @@ spec:
 		credentials(credentialType: 'org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl', 
 			defaultValue: '', description: 'WPM Securiy Token', name: 'WPM_CREDENTIALS', required: true)
 		string(name: 'REGISTRY', defaultValue: 'registry.localhost', description: 'Endpoint of the docker registry')
-		string(name: 'HOST', defaultValue: 'edge.localhost', description: 'Base hostname of your cloud machine for the ingress')
+		string(name: 'HOST', defaultValue: 'edge.localhost', description: 'Hostname of your cloud machine for the ingress')
         string(name: 'EDGE_VERSION', defaultValue: '10.16.5', description: 'Base version for the build')
 	}
 
