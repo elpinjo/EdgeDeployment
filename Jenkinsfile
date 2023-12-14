@@ -31,7 +31,7 @@ spec:
     projected:
       sources:
       - secret:
-          name: docker-credentials 
+          name: swagregcred 
           items:
             - key: .dockerconfigjson
               path: config.json 
