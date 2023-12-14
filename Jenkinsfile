@@ -45,15 +45,15 @@ spec:
 			defaultValue: '', description: 'GitHub credentials ', name: 'GITHUB_CREDENTIALS', required: true)
 		credentials(credentialType: 'org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl', 
 			defaultValue: '', description: 'WPM Securiy Token', name: 'WPM_CREDENTIALS', required: true)
-		string(name: 'REGISTRY', defaultValue: 'registry.localhost', description: 'Endpoint of the docker registry')
+		string(name: 'REGISTRY', defaultValue: 'registry.k8s', description: 'Endpoint of the docker registry')
 		string(name: 'HOST', defaultValue: 'edge.localhost', description: 'Hostname of your cloud machine for the ingress')
-        string(name: 'EDGE_VERSION', defaultValue: '10.16.5', description: 'Base version for the build')
+        string(name: 'EDGE_VERSION', defaultValue: '11.0', description: 'Base version for the build')
 	}
 
 	environment {
 		PACKAGE = "*"
 		NAMESPACE = "edge-deployment"
-		REGISTRY_INGRESS = "http://${params.REGISTRY}"
+		REGISTRY_INGRESS = "https://${params.REGISTRY}"
 		CONTAINER = "demo-edge-runtime"
 		CONTAINER_TAG = "1.0.${env.BUILD_NUMBER}"
 		EDGE_VERSION = "${params.EDGE_VERSION}"
@@ -81,27 +81,23 @@ spec:
 			}
 		}
 
-        stage('Build'){
-            steps {
-				container(name: 'dind', shell: '/bin/sh') {
-					sh '''#!/bin/sh
-            			cd ${PACKAGE}
-            		'''
-					script {
-						docker.withRegistry("${REGISTRY_INGRESS}") {
-					
-							def customImage = docker.build("${CONTAINER}:${CONTAINER_TAG}", "${PACKAGE}/build/container --no-cache --build-arg EDGE_VERSION=${EDGE_VERSION} --build-arg WPM_CRED=${WPM_CRED} --build-arg GITHUB_CREDS_USR=${GITHUB_CREDS_USR} --build-arg GITHUB_CREDS_PSW=${GITHUB_CREDS_PSW}")
-
-							/* Push the container to the custom Registry */
-							customImage.push()
-						}
-					}
-				}
-			}
+    stage('Build') {
+		  steps {
+			  container(name: 'kaniko', shell: '/busybox/sh') {
+				  sh '''#!/busybox/sh
+				  /kaniko/executor --context ${PACKAGE} \
+					  --destination ${CONTAINER}:${CONTAINER_TAG} \
+		  			--build-arg EDGE_VERSION=${EDGE_VERSION} \
+		  			--build-arg WPM_CRED=${WPM_CRED} \
+		  			--build-arg GITHUB_CREDS_USR=${GITHUB_CREDS_USR} \
+		  			--build-arg GITHUB_CREDS_PSW=${GITHUB_CREDS_PSW}")
+				  '''
+			  }
+		  }
 		}
 		
 		stage('Deploy-Container'){
-            steps {
+      steps {
 				container(name: 'dind', shell: '/bin/sh') {
 					withKubeConfig([credentialsId: 'jenkins-agent-account', serverUrl: 'https://kubernetes.default']) {
 						sh '''#!/bin/sh
@@ -116,7 +112,7 @@ spec:
 						}
 					}
 				}
-            }
+      }
 		}
-    }
+  }
 }
