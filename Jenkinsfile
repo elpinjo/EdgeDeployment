@@ -11,8 +11,12 @@ spec:
   - name: jnlp
     workingDir: /tmp/jenkins
   - name: kubectl
-    image: rancher/kubectl:v1.25.16
+    image: portainer/kubectl-shell
     workingDir: /tmp/jenkins
+    restartPolicy: Never
+    command: 
+    - /bin/cat
+    tty: true
   - name: kaniko
     workingDir: /tmp/jenkins
     image: gcr.io/kaniko-project/executor:debug
