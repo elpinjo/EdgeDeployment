@@ -87,6 +87,7 @@ spec:
 			  container(name: 'kaniko', shell: '/busybox/sh') {
 				  sh '''#!/busybox/sh
 				  /kaniko/executor --context . \
+				    --skip-tls-verify \
 					  --destination ${REGISTRY}/${CONTAINER}:${CONTAINER_TAG} \
 		  			--build-arg EDGE_VERSION=${EDGE_VERSION} \
 		  			--build-arg WPM_CRED=${WPM_CRED} \
