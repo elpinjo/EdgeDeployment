@@ -124,7 +124,7 @@ spec:
 								sh 'kubectl -n ${NAMESPACE} get configmap demo-edge-runtime'
 							} catch (exc) {
 								echo 'ConfigMap does not exist yet'
-								sh '''kubectl apply -f configmaps.yml'''
+								sh '''kubectl apply -f deployment/configmaps.yml'''
 							}
 						}
 					}
