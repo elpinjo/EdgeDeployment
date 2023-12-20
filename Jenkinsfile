@@ -119,6 +119,14 @@ spec:
 								sh '''cat deployment/service-route.yml | sed --expression='s/${HOST}/'$HOST'/g' | sed --expression='s/${CONTAINER}/'$CONTAINER'/g' | sed --expression='s/${NAMESPACE}/'$NAMESPACE'/g' | kubectl apply -f -'''
 							}
 						}
+						script {
+							try {
+								sh 'kubectl -n ${NAMESPACE} get configmap demo-edge-runtime'
+							} catch (exc) {
+								echo 'ConfigMap does not exist yet'
+								sh '''kubectl apply -f configmaps.yml'''
+							}
+						}
 					}
 				}
       }
