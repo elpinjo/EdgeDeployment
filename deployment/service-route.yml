@@ -13,23 +13,4 @@ spec:
       targetPort: 5555
   selector:
     app: ${CONTAINER}
-  type: ClusterIP
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ${CONTAINER}-ingress
-  namespace: "${NAMESPACE}"
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-spec:
-  rules:
-  - host: ${HOST}
-    http:
-      paths:
-      - backend:
-          service:
-            name: ${CONTAINER}-service
-            port: 
-              number: 5555
-        pathType: ImplementationSpecific              
+  type: LoadBalancer
