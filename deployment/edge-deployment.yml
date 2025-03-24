@@ -1,22 +1,22 @@
 kind: "Deployment"
 apiVersion: "apps/v1"
 metadata:
-  name: "${CONTAINER}"
-  namespace: "edge-deployment"
+  name: "wm-edge-runtime"
+  namespace: "swag-infra"
   labels:
-    app: "${CONTAINER}"
+    app: "wm-edge-runtime"
 spec:
   selector:
     matchLabels:
-      app: "${CONTAINER}" 
+      app: "wm-edge-runtime" 
   template: 
     metadata:
       labels:
-        app: "${CONTAINER}"
+        app: "wm-edge-runtime"
     spec:
       containers:
-        - name: "${CONTAINER}"
-          image: "${REGISTRY}/${CONTAINER}:${CONTAINER_TAG}"
+        - name: "wm-edge-runtime"
+          image: "registry.k8s/wm-edge-runtime:11.0.11"
           ports:
             - containerPort: 5555
               protocol: "TCP"

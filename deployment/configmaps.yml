@@ -5,9 +5,9 @@ metadata:
   name: demo-edge-runtime
   namespace: edge-deployment
 data:
-  SAG_IS_CLOUD_REGISTER_TOKEN: d97210488b5c49da8dc
-  SAG_IS_CLOUD_REGISTER_URL: https://wmintanywhere.int-aw-au.webmethods.io
-  SAG_IS_EDGE_CLOUD_ALIAS: EdgeRuntime_NL_MIHE_K8S
+  SAG_IS_CLOUD_REGISTER_TOKEN: c03fa1cbe69a479e88bbec53508a9bf078ed31789af344a78bad502ce7f4ffae
+  SAG_IS_CLOUD_REGISTER_URL: https://presalesemeadev.int-aws-de.webmethods.io
+  SAG_IS_EDGE_CLOUD_ALIAS: EdgeRuntime_NL_MIHE_k8s
   SAG_IS_HEALTH_ENDPOINT_ACL: Anonymous
   SAG_IS_CLOUD_ALLOWSYNC: "false"
 ---

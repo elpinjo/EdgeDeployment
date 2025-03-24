@@ -2,9 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: ${CONTAINER}
-  name: ${CONTAINER}-service
-  namespace: ${NAMESPACE}
+    app: wm-edge-runtime
+  name: wm-edge-runtime-service
+  namespace: swag-infra
 spec: 
   ports:
     - name: api-container-tcp
@@ -12,5 +12,5 @@ spec:
       protocol: TCP
       targetPort: 5555
   selector:
-    app: ${CONTAINER}
+    app: wm-edge-runtime
   type: LoadBalancer
