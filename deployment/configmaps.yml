@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: demo-edge-runtime
-  namespace: edge-deployment
+  namespace: swag-infra
 data:
   SAG_IS_CLOUD_REGISTER_TOKEN: c03fa1cbe69a479e88bbec53508a9bf078ed31789af344a78bad502ce7f4ffae
   SAG_IS_CLOUD_REGISTER_URL: https://presalesemeadev.int-aws-de.webmethods.io
@@ -15,7 +15,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: application-properties-is
-  namespace: "edge-deployment"
+  namespace: "swag-infra"
 data:
   application.properties: |
     healthindicators.Adapters.enabled=true
