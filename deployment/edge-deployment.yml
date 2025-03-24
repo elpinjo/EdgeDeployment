@@ -17,6 +17,7 @@ spec:
       containers:
         - name: "wm-edge-runtime"
           image: "registry.k8s/wm-edge-runtime:11.0.11"
+          imagePullSecret: wmregcred
           ports:
             - containerPort: 5555
               protocol: "TCP"
